@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generate Image</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0;
+}    
+    
+body{
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  height: auto;	
+  background: white;
+}    
+
+section{
+  width: 90%;
+  height: auto;
+  margin: 7rem auto;
+}
+
+.wrapper{
+  margin-top: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+textarea{
+  width: 100%;
+  height: 60px;
+        background: white;
+        display: flex;
+        margin: 1.3rem auto;
+        padding: 23px 40px;
+        border: none;
+        outline: none;
+        border-radius: 2rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+} 
+
+button{
+  width: 100%;
+	height: 60px;
+	font-size: 1rem;
+	background: black;
+	color: white;
+	margin: 0 auto;
+	border: none;
+	outline: none;
+	border-radius: 2rem;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+button:hover{
+  background: white;
+  color: black;
+}
+
+#result{
+  margin-top: 4rem;
+}
+
+img {
+  width: 350px;
+  height: auto
+}
+</style>
+<body>
+ <section>
+  <h2>Generate an Image using Open AI API</h2>
+  <div class="wrapper">
+  <textarea id="prompt"></textarea>
+  <button id="generateBtn">Generate an Image</button>
+  <div id="result"></div>  
+  </div>
+  </section>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  var generateBtn = document.getElementById('generateBtn');
+  generateBtn.addEventListener('click', function() {
+    var prompt = document.getElementById('prompt').value;
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/generate-image');
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        var imageUrl = response.image_url;
+        var resultContainer = document.getElementById('result');
+        resultContainer.innerHTML = '<img src="' + imageUrl + '" alt="Generated Image">';
+      } else {
+        console.log('Error:', xhr.statusText);
+      }
+    };
+    xhr.onerror = function() {
+      console.log('Request failed');
+    };
+    xhr.send(JSON.stringify({ prompt: prompt }));
+  });
+});
+
+  </script>
+</body>
+</html>
